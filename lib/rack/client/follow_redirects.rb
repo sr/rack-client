@@ -1,6 +1,4 @@
 class Rack::Client::FollowRedirects
-    include Rack::Test::Methods
-
     def initialize(app)
       @app = app
     end
