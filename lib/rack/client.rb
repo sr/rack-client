@@ -15,7 +15,7 @@ module Rack
     VERSION = "0.1.0"
     include Rack::Test::Methods
     HTTP_METHODS = [:head, :get, :put, :post, :delete]
-    
+
     class << self
       extend Forwardable
       def_delegators :new, *HTTP_METHODS

@@ -64,7 +64,7 @@ describe Rack::Client, "without middleware" do
     it "puts data" do
       response = Rack::Client.put "http://localhost:9292/shelf/ctm", "some data"
       response.status.should == 200
-      response["Location"].should == "/shelf/ctm"      
+      response["Location"].should == "/shelf/ctm"
     end
 
     it "deletes data" do
@@ -82,7 +82,7 @@ describe Rack::Client, "without middleware" do
   context "at the rack-test level" do
     include Rack::Test::Methods
     def app() Rack::Client.new end
-    
+
     it "returns an empty body" do
       get "http://localhost:9292/empty"
       last_response.status.should == 200
@@ -106,7 +106,7 @@ describe Rack::Client, "without middleware" do
     it "puts data" do
       put "http://localhost:9292/shelf/ctm", "some data"
       last_response.status.should == 200
-      last_response["Location"].should == "/shelf/ctm"      
+      last_response["Location"].should == "/shelf/ctm"
     end
 
     it "deletes data" do
