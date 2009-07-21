@@ -16,5 +16,19 @@ module Rack
     def self.call(env)
       Rack::Client::HTTP.call(env)
     end
+
+    class << self
+      extend Forwardable
+      def_delegators :new, :head, :get, :put, :post, :delete
+    end
+
+    extend Forwardable
+    def_delegators :client, :head, :get, :put, :post, :delete
+
+    private
+
+    def client
+      @client ||= Rack::Test::Session.new(Rack::MockSession.new(self.class))
+    end
   end
 end
