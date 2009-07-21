@@ -32,7 +32,7 @@ describe Rack::Client, "with an Rack app endpoint" do
       client = Rack::Client.new do
         run Rack::URLMap.new("http://google.com/" => MyApp)
       end
-      response = client.get("http://example.org/")
+      response = client.get("http://example.org/awesome")
       response.status.should == 404
     end
   end
