@@ -20,19 +20,33 @@ module Rack
       attr_accessor :client
     end
 
-    self.client =  Proc.new { |app|
-      Rack::Test::Session.new(Rack::MockSession.new(app))
-    }
-
-    def self.new(client=self.client, &block)
-      app = Rack::Builder.new(&block)
-      app.run(self)
-
-      client.call(app)
+    def self.new(&block)
+      Builder.new(&block).to_app
     end
 
     def self.call(env)
       Rack::Client::HTTP.call(env)
+    end
+
+    class Builder < Rack::Builder
+      def initialize(&block)
+        @client = Proc.new { |app| Rack::MockRequest.new(app) }
+        super
+      end
+
+      def client(&block)
+        @client = block
+      end
+
+      def run(*args, &block)
+        @ran = true
+        super(*args, &block)
+      end
+
+      def to_app(*args, &block)
+        run Rack::Client::HTTP unless @ran
+        @client.call(super(*args, &block))
+      end
     end
   end
 end
