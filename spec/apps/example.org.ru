@@ -45,6 +45,11 @@ class ExampleOrg < Sinatra::Base
   get "/no-etag" do
     ""
   end
+
+  get "/cached" do
+    headers["Cache-Control"] = "max-age: 30"
+    "cached"
+  end
 end
 
 require 'pp'

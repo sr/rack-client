@@ -68,7 +68,7 @@ class Rack::Client::HTTP
   def request_headers
     headers = {}
     @env.each do |k,v|
-      if k =~ /^HTTP_(.*)$/
+      if v && k =~ /^HTTP_(.*)$/
         headers[$1] = v
       end
     end
