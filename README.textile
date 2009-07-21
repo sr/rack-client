@@ -65,6 +65,11 @@ describe Demo, "/store resource" do
 end
 </pre>
 
+h2. Run the test suite
+
+Start a server for specs to make requests against with
+`rackup spec/apps/example.org.ru -p9292`. Then, `rake` as usual.
+
 h1. Contributors
 
 halorgium, larrytheliquid
