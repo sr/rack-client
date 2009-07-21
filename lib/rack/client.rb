@@ -8,6 +8,10 @@ require 'forwardable'
 
 module Rack
   class Client < Rack::Builder
+    autoload :HTTP, 'rack/client/http'
+    autoload :Auth, 'rack/client/auth'
+    autoload :FollowRedirects, 'rack/client/follow_redirects'
+
     VERSION = "0.1.0"
     include Rack::Test::Methods
     HTTP_METHODS = [:head, :get, :put, :post, :delete]
@@ -29,9 +33,3 @@ module Rack
     alias app to_app
   end
 end
-
-$:.unshift File.dirname(__FILE__)
-
-require 'client/http'
-require 'client/auth'
-require 'client/follow_redirects'
