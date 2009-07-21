@@ -2,9 +2,13 @@ require File.dirname(__FILE__) + '/spec_helper'
 
 describe Rack::Client, "with an Auth::Basic middleware" do
   it "succeeds with authorization" do
-    client = Rack::Client.new do
+    app = Rack::Builder.new {
       use Rack::Client::Auth::Basic, "username", "password"
-    end
+      run Rack::Client
+    }
+
+    client = Rack::MockRequest.new(app)
+
     response = client.get("http://localhost:9292/auth/ping")
     response.status.should == 200
     response.headers["Content-Type"].should == "text/html"
@@ -12,9 +16,13 @@ describe Rack::Client, "with an Auth::Basic middleware" do
   end
 
   it "fails with authorization" do
-    client = Rack::Client.new do
+    app = Rack::Builder.new {
       use Rack::Client::Auth::Basic, "username", "fail"
-    end
+      run Rack::Client
+    }
+
+    client = Rack::MockRequest.new(app)
+
     response = client.get("http://localhost:9292/auth/ping")
     response.status.should == 401
     response.body.should == ""
