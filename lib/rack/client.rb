@@ -6,35 +6,33 @@ require 'rack'
 require 'forwardable'
 
 module Rack
-  class Client
+  module Client
     autoload :HTTP, 'rack/client/http'
     autoload :Auth, 'rack/client/auth'
     autoload :FollowRedirects, 'rack/client/follow_redirects'
 
     VERSION = "0.1.0"
 
-    def self.call(env)
-      Rack::Client::HTTP.call(env)
-    end
-
     class << self
       extend Forwardable
       def_delegators :new, :head, :get, :put, :post, :delete
+
+      attr_accessor :client
     end
 
-    extend Forwardable
-    def_delegators :client, :head, :get, :put, :post, :delete
+    self.client =  Proc.new { |app|
+      Rack::Test::Session.new(Rack::MockSession.new(app))
+    }
 
-    def initialize(&block)
-      @app = Rack::Builder.new(&block)
-      @app.run(self.class)
-      @app.to_app
+    def self.new(client=self.client, &block)
+      app = Rack::Builder.new(&block)
+      app.run(self)
+
+      client.call(app)
     end
 
-    private
-
-    def client
-      @client ||= Rack::Test::Session.new(Rack::MockSession.new(@app))
+    def self.call(env)
+      Rack::Client::HTTP.call(env)
     end
   end
 end
