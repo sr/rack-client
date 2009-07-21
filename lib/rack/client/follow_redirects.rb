@@ -17,7 +17,7 @@ class Rack::Client::FollowRedirects
           end
         end
         new_env["REQUEST_METHOD"] = "GET"
-        session = Rack::Test::Session.new(@app)
+        session = Rack::Test::Session.new(Rack::MockSession.new(@app))
         env = session.send(:env_for, uri.to_s, new_env)
         call(env)
       else
