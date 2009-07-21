@@ -25,10 +25,16 @@ module Rack
     extend Forwardable
     def_delegators :client, :head, :get, :put, :post, :delete
 
+    def initialize(&block)
+      @app = Rack::Builder.new(&block)
+      @app.run(self.class)
+      @app.to_app
+    end
+
     private
 
     def client
-      @client ||= Rack::Test::Session.new(Rack::MockSession.new(self.class))
+      @client ||= Rack::Test::Session.new(Rack::MockSession.new(@app))
     end
   end
 end
