@@ -38,7 +38,7 @@ module Rack
       end
 
       def app
-        build(@endpoint || Rack::Client::HTTP)
+        build(@endpoint || Rack::Client::Typhoeus)
       end
     end
   end
@@ -47,5 +47,6 @@ end
 current_dir = File.expand_path(File.dirname(__FILE__) + '/client')
 
 require current_dir + '/http'
+require current_dir + '/typhoeus'
 require current_dir + '/auth'
 require current_dir + '/follow_redirects'
