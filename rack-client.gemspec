@@ -1,9 +1,8 @@
-require "lib/rack/client"
 require "bundler"
 
 Gem::Specification.new do |s|
   s.name              = "rack-client"
-  s.version           = Rack::Client::VERSION
+  s.version           = "0.2.2.pre"
   s.author            = "Tim Carey-Smith"
   s.email             = "tim@spork.in"
   s.homepage          = "http://github.com/halorgium/rack-client"
