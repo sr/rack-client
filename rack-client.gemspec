@@ -35,6 +35,6 @@ spec/spec_helper.rb
 ]
 
   Bundler::Dsl.load_gemfile("Gemfile").dependencies.
-    reject { |d| d.only && d.only.include?("release") }.
+    select { |d| d.only && d.only.include?("release") }.
     each   { |d| s.add_dependency(d.name, d.version)  }
 end
