@@ -1,9 +1,8 @@
 require 'rake'
-require "rake/gempackagetask"
 require "rake/clean"
 require "spec/rake/spectask"
-require 'bundler'
-require File.expand_path("./lib/rack/client")
+
+require "lib/rack/client"
 
 Spec::Rake::SpecTask.new(:spec) do |t|
   t.spec_files = FileList['spec/*_spec.rb']
@@ -12,31 +11,18 @@ end
 
 task :default  => :spec
 
-spec = Gem::Specification.new do |s|
-  s.name              = "rack-client"
-  s.rubyforge_project = s.name
-  s.version           = Rack::Client::VERSION
-  s.author            = "Tim Carey-Smith"
-  s.email             = "tim" + "@" + "spork.in"
-  s.homepage          = "http://github.com/halorgium/rack-client"
-  s.summary           = "A client wrapper around a Rack app or HTTP"
-  s.description       = s.summary
-  s.files             = %w[History.txt LICENSE README.textile Rakefile] + Dir["lib/**/*"] + Dir["demo/**/*"]
-  s.test_files        = Dir["spec/**/*"]
+directory "pkg/"
+CLOBBER.include "pkg"
 
-  manifest = Bundler::Dsl.load_gemfile(File.dirname(__FILE__) + '/Gemfile')
-  manifest.dependencies.each do |d|
-    next unless d.only && d.only.include?('release')
-    s.add_dependency(d.name, d.version)
-  end
+GEM = "pkg/rack-client-#{Rack::Client::VERSION}.gem"
+
+desc "Build the gem"
+file GEM => "pkg/" do |f|
+  sh "gem exec gem build rack-client.gemspec"
+  mv File.basename(f.name), f.name
 end
 
-Rake::GemPackageTask.new(spec) do |package|
-  package.gem_spec = spec
-end
-
-desc 'Install the package as a gem.'
-task :install => [:clean, :package] do
-  gem = Dir['pkg/*.gem'].first
-  sh "sudo gem install --no-rdoc --no-ri --local #{gem}"
+desc "Install the gem"
+task :install => GEM do
+  sh "gem install --no-rdoc --no-ri --local #{GEM}"
 end
