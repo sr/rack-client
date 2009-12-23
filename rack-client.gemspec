@@ -34,7 +34,7 @@ spec/redirect_spec.rb
 spec/spec_helper.rb
 ]
 
-  Bundler::Dsl.load_gemfile("Gemfile").dependencies.
+  Bundler::Dsl.load_gemfile(File.expand_path("../Gemfile", __FILE__)).dependencies.
     select { |d| d.only && d.only.include?("release") }.
     each   { |d| s.add_dependency(d.name, d.version)  }
 end
